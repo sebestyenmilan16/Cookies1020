@@ -21,30 +21,36 @@ class CookieManager extends Component {
   }
 
   // ----- Cookie helpers -----
-  getCookies = async () => {
+  getCookies = () => {
     const cookies = document.cookie.split(';')
     console.log('cookies', cookies);
 
-    const cs = await cookieStore.getAll()
-      console.log('cs(cookie store)', cs)
 
-    return cookies.map( async (cookieStr)=>{
+    return cookies.map( (cookieStr)=>{
       const rawStr = cookieStr.trim()
       const [name, value] = rawStr.split('=')
-      
-      const expirationDate = cs.find( (csElem) => csElem.name == name )?.expires
-
-      console.log('expirationDate', expirationDate);
+  
       
 
       
 
-      return {name: name?.trim(), value: value?.trim(), expirationDate}
+      return {name: name?.trim(), value: value?.trim()}
     } )
     
   };
 
   setCookie = (name, value, days) => {
+
+    const expirationDate = new Date()
+    expirationDate.setTime(expirationDate.getTime() + 1000*60*60*24*days,)
+
+    const cookieStr = `${name}=${value}; ${new Date()}; expires=${expirationDate.toUTCString()}; path=/`
+    document.cookie = cookieStr
+
+    console.log(cookieStr)
+    console.log(document.cookie);
+    
+    
 
   };
 
