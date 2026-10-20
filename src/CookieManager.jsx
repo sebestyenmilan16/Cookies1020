@@ -21,13 +21,25 @@ class CookieManager extends Component {
   }
 
   // ----- Cookie helpers -----
-  getCookies = () => {
+  getCookies = async () => {
     const cookies = document.cookie.split(';')
     console.log('cookies', cookies);
-    return cookies.map( (cookieStr)=>{
-      const pair = cookieStr.split('=')
-      console.log('pair', pair)
-      return pair
+
+    const cs = await cookieStore.getAll()
+      console.log('cs(cookie store)', cs)
+
+    return cookies.map( async (cookieStr)=>{
+      const rawStr = cookieStr.trim()
+      const [name, value] = rawStr.split('=')
+      
+      const expirationDate = cs.find( (csElem) => csElem.name == name )?.expires
+
+      console.log('expirationDate', expirationDate);
+      
+
+      
+
+      return {name: name?.trim(), value: value?.trim(), expirationDate}
     } )
     
   };
